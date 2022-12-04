@@ -196,7 +196,7 @@ protected:
             // by default we will use hw_conc -1 threads for task pool.
             int num_threads = std::thread::hardware_concurrency() - 1;
             if(num_threads <= 0){
-                _num_threads = 2;   // We decide to assign 2 threads but hw_conc returned unknown number.
+                _num_threads = 1;
             }else{
                 _num_threads = num_threads;
             }
@@ -214,7 +214,7 @@ protected:
             // by default we will use hw_conc -1 threads for task pool.
             _num_threads = std::thread::hardware_concurrency() - 1;
             if(num_threads <= 0){
-                _num_threads = 2;   // We decide to assign 2 threads but hw_conc returned unknown number.
+                _num_threads = 1;
             }else if(num_threads > _num_threads){
                 throw std::bad_alloc();
             }else{
