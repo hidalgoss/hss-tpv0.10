@@ -1,0 +1,12 @@
+[submodule "thirdparties/hss-tsqv0.10"]
+	path = thirdparties/hss-tsqv0.10
+	url = https://github.com/hidalgoss/hss-tsqv0.10.git
+[submodule "thirdparties/hss-bmrk-utils"]
+	path = thirdparties/hss-bmrk-utils
+	url = https://github.com/hidalgoss/hss-bmrk-utils.git
+[submodule "thirdparties/benchmark"]
+	path = thirdparties/benchmark
+	url = https://github.com/google/benchmark.git
+[submodule "thirdparties/googletest"]
+    path = thirdparties/googletest
+    url = https://github.com/google/googletest.git
