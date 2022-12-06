@@ -35,7 +35,7 @@ class TaskManagerPublisher : public Publisher<R, Args...>
     std::condition_variable condTaskQueue;
 
     std::map<std::thread::id, std::unique_ptr<std::thread>> thread_map;
-    hss::thread_safe_queue<std::function<R()>> task_fifo;
+    hss::thread_safe_queue<std::function<void()>> task_fifo;
 
     bool isTaskLoopRunning = false;
     int _num_threads = 0;
@@ -53,7 +53,7 @@ protected:
             {
                 std::mutex localMutex;
                 bool result_pop = false;
-                std::function<R()> task;
+                std::function<void()> task;
 
                 {
                     std::unique_lock<std::mutex> localUniqueLock(localMutex);
@@ -139,7 +139,8 @@ protected:
                 if(t.second->joinable())
                     t.second->join();
             }
-            DEBUG_MSG("TaskManager() stop(). All running threads stoped.");
+            DEBUG_MSG("DEBUG_MSG TaskManager() stop(). All running threads stoped.");
+            std::cout << "TaskManager() stop(). All running threads stoped." << std::endl;
         } catch (...) {
             DEBUG_MSG("TaskManager() exception. stop().");
             throw;
@@ -167,7 +168,7 @@ protected:
             std::future<return_type> local_future = task->get_future();
 
             DEBUG_MSG("push_task !!! tid *" << std::this_thread::get_id() << "*" );
-            task_fifo.push( [task]() -> R { (*task)();} );
+            task_fifo.push( [task]() -> void { (*task)(); } );
             condTaskQueue.notify_one();
             return local_future;
 

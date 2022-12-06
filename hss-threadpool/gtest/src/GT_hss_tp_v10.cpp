@@ -22,6 +22,7 @@ TEST(TS_hssObserverPattern, GT_hss_observer_middleware_v10_GC1)
             DEBUG_MSG("Update() sensor rec id: *" << sensor.id_sensor
                       << "* threadID: *" << std::this_thread::get_id() << "*");
             sensor_result1 = sensor;
+            return;
         };
 
         subscriber1->registerUpdate( fx1 );
@@ -40,6 +41,7 @@ TEST(TS_hssObserverPattern, GT_hss_observer_middleware_v10_GC1)
             DEBUG_MSG("Update() sensor rec id: *" << sensor.id_sensor
                       << "* threadID: *" << std::this_thread::get_id() << "*");
             sensor_result2 = sensor;
+            return;
         };
         hss::Subscriber<void, hss::Sensor> *subscriber2 =
                 communicator.getSubscriber("event 1");
@@ -52,6 +54,7 @@ TEST(TS_hssObserverPattern, GT_hss_observer_middleware_v10_GC1)
             DEBUG_MSG("Update() sensor rec id: *" << sensor.id_sensor
                       << "* threadID: *" << std::this_thread::get_id() << "*");
             sensor_result3 = sensor;
+            return;
         };
         hss::Subscriber<void, hss::Sensor> *subscriber3 =
                 communicator.getSubscriber("event 2");
@@ -128,7 +131,8 @@ TEST(TS_hssObserverPattern, GT_hss_observer_middleware_v10_GC1)
         EXPECT_EQ(sensor_result3.id_sensor, sensor3.id_sensor);
 
         //std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        communicator.stopAndFinish();
+        std::cout << "arrives to stopAndFinish 1." << std::endl;
+        //communicator.stopAndFinish();
         std::cout << "sale " << std::endl;
     }
     catch (...)
@@ -266,7 +270,8 @@ TEST(TS_hssObserverPattern, GT_hss_observer_middleware_v10_GC2)
         EXPECT_EQ(sensor_result3.id_sensor, sensor3.id_sensor);
 
         //std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        communicator.stopAndFinish();
+        std::cout << "arrives to stopAndFinish." << std::endl;
+        //communicator.stopAndFinish();
         std::cout << "sale " << std::endl;
     }
     catch (...)
