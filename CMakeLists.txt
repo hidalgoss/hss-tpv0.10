@@ -72,6 +72,12 @@ ELSE()
 ENDIF()
 message(STATUS "hss-bmrk-utils path: " ${HSSBMRKUTILS_PATH})
 
+IF(DEFINED HSS_MPMCQUEUE_PATH)
+ELSE()
+  SET(HSS_MPMCQUEUE_PATH ${CMAKE_SOURCE_DIR}/thirdparties/hss-MPMCQueue)
+ENDIF()
+message(STATUS "hss-MPMCQueue path: " ${MPMCQUEUE_PATH})
+
 
 # Ouput paths.
 # ------------------------------------------------------------------------------------------------------
@@ -87,3 +93,4 @@ ADD_SUBDIRECTORY(${GOOGLETEST_PATH})
 #ADD_SUBDIRECTORY(${GBENCHMARK_PATH})
 ADD_SUBDIRECTORY(${HSSTSQUEUE_PATH})
 ADD_SUBDIRECTORY(${HSSBMRKUTILS_PATH})
+ADD_SUBDIRECTORY(${HSS_MPMCQUEUE_PATH})

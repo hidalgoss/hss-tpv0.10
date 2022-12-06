@@ -6,14 +6,10 @@
 #include <mutex>
 #include <future>
 #include <thread>
-//#include <utility>
 #include <iostream>
-///#include <functional>
-#include "hss_task_v10.hpp"
+//#include <hss_ts_queue.hpp>
 #include "hss_publisher_v10.hpp"
-#include <hss_ts_queue.hpp>
-
-
+#include "hss_iqueue_v10.hpp"
 
 #ifdef DEBUG
 #define DEBUG_MSG(str) do { std::cout << str << std::endl; } while( false )
@@ -23,9 +19,6 @@
 
 namespace hss
 {
-
-
-
 // R: Return type, void as instante.
 // ...Args: f(x) input parameter list signature, 'const myClass & obj' as instance.
 template <typename R, typename... Args>
@@ -35,7 +28,8 @@ class TaskManagerPublisher : public Publisher<R, Args...>
     std::condition_variable condTaskQueue;
 
     std::map<std::thread::id, std::unique_ptr<std::thread>> thread_map;
-    hss::thread_safe_queue<std::function<void()>> task_fifo;
+    //hss::thread_safe_queue<std::function<void()>> _task_fifo;
+    hss::IQueue<std::function<void()>> _task_fifo;
 
     bool isTaskLoopRunning = false;
     int _num_threads = 0;
@@ -44,7 +38,6 @@ class TaskManagerPublisher : public Publisher<R, Args...>
     int _num_active_tasks = 0;
 
 protected:
-
     void TaskLoop()
     {
         try{
@@ -61,7 +54,7 @@ protected:
                     {
                         DEBUG_MSG("TaskLoop. Notification received. threadID: *"
                                   << std::this_thread::get_id() << "*");
-                        return (!task_fifo.empty() || !isTaskLoopRunning);
+                        return (!_task_fifo.empty() || !isTaskLoopRunning);
                     });// end condTaskQueue
 
                     // if TaskLoop should finish running, exit inmediately.
@@ -70,7 +63,7 @@ protected:
 
                     // 8.05.22 - He modificado la f(x) de la queue para soportar Task que
                     // sean unique_ptr... Falta probarla.
-                    result_pop = task_fifo.try_pop( task );
+                    result_pop = _task_fifo.try_pop( task );
 
                     if(result_pop){
                         DEBUG_MSG("TaskLoop. poped task threadID: *" << std::this_thread::get_id() << "*");
@@ -168,7 +161,7 @@ protected:
             std::future<return_type> local_future = task->get_future();
 
             DEBUG_MSG("push_task !!! tid *" << std::this_thread::get_id() << "*" );
-            task_fifo.push( [task]() -> void { (*task)(); } );
+            _task_fifo.push( [task]() -> void { (*task)(); } );
             condTaskQueue.notify_one();
             return local_future;
 
@@ -191,9 +184,10 @@ protected:
 //        return res;
 //    }
 
-    TaskManagerPublisher()
+    TaskManagerPublisher(IQueue<std::function<void()>> & task_fifo)
     {
         try {
+            this->_task_fifo = task_fifo;
             // by default we will use hw_conc -1 threads for task pool.
             int num_threads = std::thread::hardware_concurrency() - 1;
             if(num_threads <= 0){
@@ -209,12 +203,13 @@ protected:
 
     // If num_threads > max_thread std::bad_alloc is thrown.
     // Is not possible to create more threads than supported by hw.
-    TaskManagerPublisher(int num_threads)
+    TaskManagerPublisher(IQueue<std::function<void()>> & task_fifo, int num_threads)
     {
         try {
+            this->_task_fifo = task_fifo;
             // by default we will use hw_conc -1 threads for task pool.
             _num_threads = std::thread::hardware_concurrency() - 1;
-            if(num_threads <= 0){
+            if(_num_threads <= 0){
                 _num_threads = 1;
             }else if(num_threads > _num_threads){
                 throw std::bad_alloc();
@@ -257,7 +252,7 @@ protected:
     }
 
     bool taskPending(){
-        return (_num_active_tasks>0 || !task_fifo.empty());
+        return (_num_active_tasks>0 || !_task_fifo.empty());
     }
 
 

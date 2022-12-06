@@ -4,6 +4,9 @@
 [submodule "thirdparties/hss-bmrk-utils"]
 	path = thirdparties/hss-bmrk-utils
 	url = https://github.com/hidalgoss/hss-bmrk-utils.git
+[submodule "thirdparties/hss-MPMCQueue"]
+        path = thirdparties/hss-MPMCQueue
+        url = https://github.com/hidalgoss/hss-MPMCQueue.git
 [submodule "thirdparties/benchmark"]
 	path = thirdparties/benchmark
 	url = https://github.com/google/benchmark.git

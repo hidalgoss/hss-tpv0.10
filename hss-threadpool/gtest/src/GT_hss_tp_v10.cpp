@@ -4,12 +4,17 @@
 #include "hss_sensor_v10.hpp"
 #include <hss_bmrk_utils.h>
 
+#include <hss_ts_queue.hpp>
+#include <MPMCQueue.h>
+
 
 TEST(TS_hssObserverPattern, GT_hss_observer_middleware_v10_GC1)
 {
     try
     {
-        hss::TmObserverMiddleware<void, hss::Sensor> communicator(4);
+        hss::thread_safe_queue<std::function<void()>> _task_fifo;
+
+        hss::TmObserverMiddleware<void, hss::Sensor> communicator(_task_fifo, 4);
 
         hss::Subscriber<void, hss::Sensor> *subscriber1 =
                 communicator.getSubscriber("event 1");
@@ -148,7 +153,9 @@ TEST(TS_hssObserverPattern, GT_hss_observer_middleware_v10_GC2)
 {
     try
     {
-        hss::TmObserverMiddleware<int, hss::Sensor> communicator(4);
+        hss::thread_safe_queue<std::function<void()>> _task_fifo;
+
+        hss::TmObserverMiddleware<int, hss::Sensor> communicator(_task_fifo, 4);
 
         hss::Subscriber<int, hss::Sensor> *subscriber1 =
                 communicator.getSubscriber("event 1");

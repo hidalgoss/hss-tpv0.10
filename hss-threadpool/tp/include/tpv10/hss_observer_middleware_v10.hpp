@@ -6,6 +6,9 @@
 #include "hss_subscriber_v10.hpp"
 //#include <hss_lock_free_queue.hpp>
 
+//#include <hss_ts_queue.hpp>
+
+
 
 
 namespace hss
@@ -15,12 +18,14 @@ template <typename R, typename... Args>
 struct TmObserverMiddleware : public TaskManagerPublisher<R, Args...>
 {
 
-    TmObserverMiddleware() : TaskManagerPublisher<R, Args...> ()
+    TmObserverMiddleware(IQueue<std::function<void()>> & task_fifo) :
+        TaskManagerPublisher<R, Args...> (task_fifo)
     {
         this->start();
     }
 
-    TmObserverMiddleware(int num_threads) : TaskManagerPublisher<R, Args...> (num_threads)
+    TmObserverMiddleware(IQueue<std::function<void()>> & task_fifo, int num_threads) :
+        TaskManagerPublisher<R, Args...> (task_fifo, num_threads)
     {
         this->start();
     }

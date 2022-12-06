@@ -23,17 +23,20 @@ ADD_LIBRARY(hss_thread_pool_v10 SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_observer_middleware_v10.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_taskmanager_publisher_v10.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_task_v10.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_iqueue_v10.hpp
   )
 
 TARGET_LINK_LIBRARIES(hss_thread_pool_v10 PUBLIC
   pthread
-  hss_ts_queue
+#  hss_ts_queue
   hss_bmrk_utils
+#  MPMCQueue
   )
 
 TARGET_INCLUDE_DIRECTORIES(hss_thread_pool_v10 PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10
-  ${HSSTSQUEUE_PATH}/include
+#  ${HSSTSQUEUE_PATH}/include
+#  ${MPMCQUEUE_PATH}/include
   ${HSSBMRKUTILS_PATH}/include
   ${GOOGLETEST_PATH}/googletest/include
   ${CMAKE_INSTALL_FULL_INCLUDEDIR}/include
