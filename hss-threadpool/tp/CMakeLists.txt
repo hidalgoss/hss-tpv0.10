@@ -23,7 +23,7 @@ ADD_LIBRARY(hss_thread_pool_v10 SHARED
   ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_observer_middleware_v10.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_taskmanager_publisher_v10.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_task_v10.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_iqueue_v10.hpp
+#  ${CMAKE_CURRENT_SOURCE_DIR}/include/tpv10/hss_iqueue_v10.hpp
   )
 
 TARGET_LINK_LIBRARIES(hss_thread_pool_v10 PUBLIC

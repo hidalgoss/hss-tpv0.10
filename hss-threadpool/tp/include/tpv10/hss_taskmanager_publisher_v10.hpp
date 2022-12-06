@@ -9,7 +9,7 @@
 #include <iostream>
 //#include <hss_ts_queue.hpp>
 #include "hss_publisher_v10.hpp"
-#include "hss_iqueue_v10.hpp"
+#include <hss_iqueue_v10.hpp>
 
 #ifdef DEBUG
 #define DEBUG_MSG(str) do { std::cout << str << std::endl; } while( false )
